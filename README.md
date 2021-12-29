@@ -4,5 +4,6 @@
 "# appCitas-spring-mongoDB" 
 "# appCitas-spring-mongoDB" 
 "# appCitas-spring-reactivo-mongoDB" 
-# texto_explicativo:breve
-# texto_explicativo:breve
+
+# App deployed with Heroku
+# https://app-citas-reactive-sofka.herokuapp.com/swagger-ui.html#/
