@@ -3,7 +3,6 @@ package com.springBajo8.springBajo8.web;
 
 import com.springBajo8.springBajo8.domain.citasDTOReactiva;
 import com.springBajo8.springBajo8.service.IcitasReactivaService;
-import com.sun.xml.internal.ws.server.ServerRtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
