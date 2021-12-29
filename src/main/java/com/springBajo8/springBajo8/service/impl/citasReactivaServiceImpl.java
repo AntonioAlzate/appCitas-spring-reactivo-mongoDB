@@ -11,9 +11,13 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Service
 public class citasReactivaServiceImpl implements IcitasReactivaService {
 
+    private static final String CANCELADA = "Cita Cancelada";
     @Autowired
     private IcitasReactivaRepository IcitasReactivaRepository;
 
@@ -54,5 +58,54 @@ public class citasReactivaServiceImpl implements IcitasReactivaService {
     @Override
     public Mono<citasDTOReactiva> findById(String id) {
         return this.IcitasReactivaRepository.findById(id);
+    }
+
+    @Override
+    public Mono<citasDTOReactiva> cancelarCita(String idPaciente) {
+        return IcitasReactivaRepository.findById(idPaciente)
+                .flatMap(citasDTOReactiva -> {
+                    citasDTOReactiva.setEstadoReservaCita(CANCELADA);
+                    return IcitasReactivaRepository.save(citasDTOReactiva);
+                });
+    }
+
+    @Override
+    public Flux<citasDTOReactiva> consultarFechaYHora(LocalDate fechaReservaLocalDate, String horaReserva) {
+        return IcitasReactivaRepository.findByFechaReservaCita(fechaReservaLocalDate)
+                .flatMap(cita -> {
+                    if(cita.getHoraReservaCita().equals(horaReserva)){
+                        return Mono.just(cita);
+                    }
+                    return Mono.empty();
+                });
+    }
+
+    @Override
+    public Mono<String> consultarMedicoConsulta(String idPaciente) {
+        Flux<citasDTOReactiva> citaReactiva = this.IcitasReactivaRepository.findByIdPaciente(idPaciente);
+
+        return citaReactiva.single().flatMap(citasDTOReactiva -> {
+            String nombres = citasDTOReactiva.getNombreMedico();
+            String apellidos = citasDTOReactiva.getApellidosMedico();
+            return Mono.just(nombres + " " + apellidos);
+        });
+    }
+
+    @Override
+    public Mono<citasDTOReactiva> agregarPadecimiento(String padecimiento, String id) {
+        Mono<citasDTOReactiva> cita = this.IcitasReactivaRepository.findById(id);
+        return cita.flatMap(citasDTOReactiva -> {
+            citasDTOReactiva.agregarPadecimiento(padecimiento);
+            return IcitasReactivaRepository.save(citasDTOReactiva);
+        });
+    }
+
+    @Override
+    public Mono<List<String>> consultarPadecimientos(String id) {
+        return this.IcitasReactivaRepository.findById(id)
+                .flatMap(citasDTOReactiva -> {
+                    List<String> padecimientos = citasDTOReactiva.getPadecimientos();
+                    return Mono.just(padecimientos);
+                });
     }
 }

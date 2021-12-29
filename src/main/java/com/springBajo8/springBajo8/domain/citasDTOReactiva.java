@@ -4,7 +4,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Document(collection = "citas")
@@ -28,6 +30,8 @@ public class citasDTOReactiva {
     private String horaReservaCita;
 
     private String estadoReservaCita;
+
+    private List<String> padecimientos = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -99,6 +103,18 @@ public class citasDTOReactiva {
 
     public void setEstadoReservaCita(String estadoReservaCita) {
         this.estadoReservaCita = estadoReservaCita;
+    }
+
+    public List<String> getPadecimientos() {
+        return padecimientos;
+    }
+
+    public void setPadecimientos(List<String> padecimientos) {
+        this.padecimientos = padecimientos;
+    }
+
+    public void agregarPadecimiento(String padecimiento){
+        this.padecimientos.add(padecimiento);
     }
 
     //private Date sendedDate = new Date();
